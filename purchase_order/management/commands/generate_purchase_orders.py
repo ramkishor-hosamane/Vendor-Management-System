@@ -9,7 +9,6 @@ class Command(BaseCommand):
     help = 'Generate purchase orders with real-life item names'
 
     def handle(self, *args, **options):
-        # Define list of real-life item names
         real_items = [
             'Laptop', 'Smartphone', 'Desk', 'Chair', 'Printer', 'Monitor', 'Keyboard', 'Mouse', 'Headphones', 'Tablet',
             'Backpack', 'Camera', 'Sunglasses', 'Watch', 'Wallet', 'Book', 'Pen', 'Notebook', 'Calendar', 'Water Bottle',
@@ -23,10 +22,8 @@ class Command(BaseCommand):
             'Flashlight', 'Batteries', 'Candles', 'Matches', 'Lighter', 'Fire Extinguisher', 'Smoke Detector', 'Carbon Monoxide Detector', 'Emergency Kit'
         ]
 
-        # Get all vendors
         vendors = Vendor.objects.all()
 
-        # Distribute purchase orders with real item names among the vendors
         for i in range(2000):
             vendor = random.choice(vendors)
             order_date = timezone.now()

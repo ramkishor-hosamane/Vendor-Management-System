@@ -9,11 +9,9 @@ class Command(BaseCommand):
     help = 'Create vendors with real names and contact details'
 
     def handle(self, *args, **options):
-        # Define lists of real names and contact details
         real_names = ['John Smith', 'Emma Johnson', 'Michael Brown', 'Emily Davis', 'Daniel Wilson', 'Olivia Martinez', 'David Anderson', 'Sophia Taylor', 'James Garcia', 'Isabella Hernandez']
         real_contact_details = ['123 Main St, City, Country', '456 Elm St, City, Country', '789 Oak St, City, Country', '321 Pine St, City, Country', '654 Maple St, City, Country']
 
-        # Create vendors with real names and contact details
         vendors = []
         for name, contact_details in zip(real_names, real_contact_details):
             vendor = Vendor.objects.create(

@@ -1,9 +1,9 @@
 from django.db import models
+from django.forms import ValidationError
 from vendor_management.models import Vendor
 from django.utils import timezone
 from django.dispatch import Signal
 
-# Define a custom signal
 po_status_changed = Signal()
 
 
@@ -25,6 +25,9 @@ class PurchaseOrder(models.Model):
         self.save()
 
     def save(self, *args, **kwargs):
+
+        self.clean()
+
         # Fetch the initial values of the instance from the database
         old_instance = type(self)._base_manager.get(pk=self.pk) if self.pk else None
 
@@ -37,4 +40,13 @@ class PurchaseOrder(models.Model):
     def __str__(self):
         return self.po_number
 
+    def clean(self) -> None:
+        # Ensure acknowledgment_date is not in the future, if provided
+        from datetime import datetime
+        if self.acknowledgment_date and  self.acknowledgment_date > datetime.now():
+            raise ValidationError("Acknowledgment date cannot be in the future.")
 
+        # Ensure quantity is not negative
+        if self.quantity < 0:
+            raise ValidationError("Quantity cannot be negative.")
+        return super().clean()

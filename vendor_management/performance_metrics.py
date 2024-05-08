@@ -25,33 +25,26 @@ def get_on_time_delivery_rate(completed_pos_for_vendor_queryset):
 
 def get_quality_rating_average(completed_pos_for_vendor_queryset):
 
-    # print(completed_pos_for_vendor_queryset.count())
-    # print("Boom")
-    # for obj in completed_pos_for_vendor_queryset:
-    #     print("obj.quality_rating = " ,obj.quality_rating)
-    # print("kyma")
     res =  completed_pos_for_vendor_queryset.filter(quality_rating__isnull=False).aggregate(
     quality_rating_avg=Coalesce(Avg(F('quality_rating')),0.0))['quality_rating_avg']
     return res
 
 
 def get_avg_response_time(total_pos_for_vendor_queryset):
-    # Calculate time difference (in days) between issue_date and acknowledgment_date, handling null values
     
-    # Aggregate and compute the average response time
     response_time_expr = ExpressionWrapper(
             F('acknowledgment_date') - F('issue_date'),
             output_field=fields.DurationField()
         )
         
-        # Aggregate and compute the average response time
+    # Aggregate and compute the average response time
     avg_response_time:timedelta = total_pos_for_vendor_queryset.annotate(
         response_time=response_time_expr
     ).aggregate(
         avg_response_time=Avg('response_time', output_field=fields.DurationField())
     )['avg_response_time']
     
-    return float(avg_response_time.days) if avg_response_time else 0.0
+    return float(avg_response_time.total_seconds()/36000) if avg_response_time else 0.0
 
 
 def get_fulfillment_rate(total_pos_for_vendor_queryset):
