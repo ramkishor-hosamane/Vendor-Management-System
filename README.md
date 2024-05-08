@@ -4,7 +4,7 @@
 
 To run the Vendor Management System application, make sure you have the following installed:
 
-- Python 3.x
+- Python 3.11
 - Django
 - Django REST Framework
 
